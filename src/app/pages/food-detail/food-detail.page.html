@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ plat.nom_plat }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/category"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col size="12" class="ion-no-padding">
+      <ion-card *ngIf="plat" class="ion-no-margin">
+        <img src="https://placehold.co/500" alt="">
+        <ion-card-header>
+          <ion-card-title>{{ plat.nom_plat }}</ion-card-title>
+          <ion-card-content class="ion-no-padding">
+            {{ plat.description_plat }}
+          </ion-card-content>
+          <ion-card-title> $ {{ plat.prix }}</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>

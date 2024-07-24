@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ category.nom_category }}</ion-title>
+    <ion-item id="panier" slot="end" routerLink="/panier">
+      <ion-icon name="cart-outline"></ion-icon>
+      <ion-badge class="badge-panier" color="danger">{{ globalService.getTotalItems() }}</ion-badge>
+    </ion-item>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar show-cancel-button="focus" placeholder="Rechercher votre plat ou menu" (ionFocus)="goToOtherPage()"
+  (ionChange)="goToOtherPage()"></ion-searchbar>
+
+  <ion-grid id="category">
+    <swiper-container [slidesPerView]="4.5" [spaceBetween]="10" [speed]="200">
+      <swiper-slide *ngFor="let category of categories">
+        <ion-item lines="none" class="ion-no-padding">
+          <img button [routerLink]="['/category', category.id ]"
+            src="https://img.freepik.com/free-photo/grilled-meat-skewers-with-fresh-vegetables-spices-generated-by-ai_188544-53896.jpg?t=st=1714789305~exp=1714792905~hmac=566b596995254839e10fa917895293962da06723b5d538d6f4c03fcce30c8fe4&w=1060"
+            alt="">
+        </ion-item>
+        <div class="category-text">{{ category.nom_category }}</div>
+      </swiper-slide>
+      <swiper-slide (click)="goToPageCategories()">
+        <ion-icon name="options-outline" class="category-icon"></ion-icon>
+        <div class="category-text">Tous</div>
+      </swiper-slide>
+    </swiper-container>
+  </ion-grid>
+
+
+  <ion-row>
+    <ion-col *ngFor="let plat of category.liste_plat" size="6">
+      <ion-card button [routerLink]="['/food-detail', plat.id]">
+        <img [src]="plat.image_plat" alt="">
+        <ion-card-header>
+          <ion-card-subtitle>{{ plat.nom_plat }}</ion-card-subtitle>
+          <ion-card-title> $ {{ plat.prix }} </ion-card-title>
+        </ion-card-header>
+
+         <ion-button color="danger" class="ion-no-border" expand="full">
+              <div class="btn-call" [hidden]="getQuantity(plat) === 0">
+                <!-- Lorsque la quantité est supérieure à 0 -->
+                <ion-col size="4" class="ion-text-start">
+                  <ion-button mode="ios" color="light" (click)="removeQuantity(plat)">
+                    <ion-icon name="remove" slot="icon-only"></ion-icon>
+                  </ion-button>
+                </ion-col>
+                <!-- Lorsque la quantité est supérieure à 0 -->
+                <ion-col size="4" class="ion-text-center quantity">
+                  <ion-text>
+                    <strong>{{ getQuantity(plat) }}</strong>
+                  </ion-text>
+                </ion-col>
+                <!-- Lorsque la quantité est supérieure à 0 -->
+                <ion-col size="4" class="ion-text-end">
+                  <ion-button mode="ios" color="light" (click)="addQuantity(plat)">
+                    <ion-icon name="add" slot="icon-only"></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </div>
+              <div class="btn-zero" [hidden]="getQuantity(plat) >= 1">
+                <!-- Lorsque la quantité est inférieure ou égale à 0, et que le contenu est affiché -->
+                <ion-button mode="ios" color="light" (click)="addQuantity(plat)" style="font-size: 14px;">
+                  <ion-icon name="add" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
+            </ion-button>
+
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button routerLink="/panier" color="primary" shape="round" expand="full" class="total-button">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="auto">
+            <ion-label>{{ globalService.getTotalItems() }} Plat(s)</ion-label>
+          </ion-col>
+          <ion-col class="ion-text-center">
+            COMMANDER
+          </ion-col>
+          <ion-col size="auto" class="ion-text-right">
+            <ion-label>{{ globalService.getItemPrixTotal() }} Fcfa</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

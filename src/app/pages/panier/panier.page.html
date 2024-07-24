@@ -1,0 +1,112 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Commande</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item lines="none" class="total-item">
+    <ion-label> Nouvelle commande </ion-label>
+    <ion-button (click)="deleteItem()" fill="clear" slot="end" color="danger" size="small">
+      <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <ion-card *ngIf="panier.length === 0" class="cart-item">
+    <div id="empty-screen" class="ion-text-center">
+      <ion-icon name="bag-handle-outline" color="danger"></ion-icon>
+      <p>
+        Aucun plat n'a été ajouté
+      </p>
+    </div>
+  </ion-card>
+
+  <ion-card *ngFor="let panierItem of panier" class="cart-item">
+    <ion-item lines="none">
+      <ion-thumbnail slot="start">
+        <ion-img
+          src="https://img.freepik.com/photos-gratuite/gros-plan-delicieuse-viande-rotie-legumes-sous-lumieres_181624-43643.jpg?t=st=1714797398~exp=1714800998~hmac=a65276258f50bc7a1934b5a6e4096a476f38109ef2891615b30a34879226a8e5&w=900"></ion-img>
+      </ion-thumbnail>
+
+      <ion-label>
+        <strong>{{ panierItem.item.nom_plat }}</strong>
+        <p class="price">
+          <ion-text color="dark">
+            <span>{{ panierItem.item.prix }} CFA</span>
+          </ion-text>
+        </p>
+      </ion-label>
+
+      <ion-col slot="end" size="2">
+        <ion-row>
+          <ion-button (click)="addQuantity(panierItem.item)" color="light">
+            <ion-icon name="add" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-row>
+
+        <ion-row class="quantity">
+          <ion-text>
+            <strong>{{ panierItem.quantite }}</strong>
+          </ion-text>
+        </ion-row>
+
+        <ion-row>
+          <ion-button (click)="removeQuantity(panierItem.item)" color="light">
+            <ion-icon name="remove" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-row>
+      </ion-col>
+    </ion-item>
+  </ion-card>
+
+
+
+  <!-- billing details -->
+  <ion-list lines="none" class="billing">
+    <ion-list-header>
+      <ion-label color="tertiary">Détails de la facture</ion-label>
+    </ion-list-header>
+
+    <ion-item-group>
+      <ion-item>
+        <ion-label color="dark">Numero de Table</ion-label>
+        <ion-text slot="end" color="dark">
+          7
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-label color="dark">Total des plats</ion-label>
+        <ion-text slot="end" color="dark">
+          {{ globalService.getTotalItems() }}
+        </ion-text>
+      </ion-item>
+
+      <ion-item class="delivery-fee">
+        <ion-label color="dark"> Frais de livraison </ion-label>
+        <ion-text slot="end" color="dark">
+          0 Fcfa
+        </ion-text>
+      </ion-item>
+
+      <ion-item class="dashedBorderTop">
+        <ion-label color="dark"><strong>À payer</strong></ion-label>
+        <ion-text slot="end" color="dark">
+          <strong> {{ globalService.getItemPrixTotal() }} Fcfa
+          </strong>
+        </ion-text>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" color="danger" mode="ios">
+      Lancer votre commande
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
