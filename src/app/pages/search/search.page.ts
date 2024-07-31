@@ -57,7 +57,10 @@ export class SearchPage implements OnInit {
 
   filterItems() {
     const searchTermLower = this.searchTerm.toLowerCase();
-    this.filteredItems = this.plats.filter((plat:any) => plat.nom_plat.toLowerCase().includes(searchTermLower))
+    this.filteredItems = this.plats.filter((plat:any) => {
+      plat.nom_plat.toLowerCase().includes(searchTermLower) || plat.category.nom_category.toLowerCase().includes(searchTermLower);
+
+  }) 
   }
 
   goToHomePage() {
