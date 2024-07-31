@@ -45,8 +45,8 @@
   </ion-row>
   <!-- affiche la liste de tous les plat dans toutes les categories  -->
   <ion-row class="nos_categories">
-    <ng-container *ngFor="let category of categories">
-      <ng-container *ngFor="let item of category.liste_plat">
+    <ng-container >
+      <ng-container *ngFor="let item of plats">
         <ion-col size="6">
           <ion-card>
             <img
