@@ -21,7 +21,7 @@ export class CategoryPage implements OnInit {
     private router: Router,
     private routerLink: Router
   ) {
-    this.categories = globalService.category_repas;
+
     this.initializeQuantities(); // Appel de la méthode pour initialiser les quantités
   }
 
@@ -30,7 +30,17 @@ export class CategoryPage implements OnInit {
     this.category =  this.globalService.getCategory(this.categorieId);
     console.log(this.category);
   }
-
+  loadCategory(id: number) {
+    this.globalService.getCategory(id).subscribe({
+      next: (response: any) => {
+        this.categories = response.curent_page;
+       
+      },
+      error: (error: any) => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
 
   initializeQuantities() {
     this.categories.forEach((category) => {

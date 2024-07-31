@@ -13,11 +13,21 @@ export class ListCategoriesPage implements OnInit {
     public globalService: GlobalService, 
   ) 
   {
-    this.categories = globalService.category_repas;
+    this.loadCategories();
   }
 
   ngOnInit() {
     console.log('');
   }
-
+  loadCategories() {
+    this.globalService.getCategories().subscribe({
+      next: (response: any) => {
+        this.categories = response.curent_page;
+       
+      },
+      error: (error: any) => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
 }

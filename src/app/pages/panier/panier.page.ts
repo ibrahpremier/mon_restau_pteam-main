@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GlobalService } from 'src/app/services/global.service';
-
+import { NavController } from '@ionic/angular';
 @Component({
   selector: 'app-panier',
   templateUrl: './panier.page.html',
@@ -8,8 +8,10 @@ import { GlobalService } from 'src/app/services/global.service';
 })
 export class PanierPage implements OnInit {
   panier: any[] = [];
+  plats: any[] = [];
+  error: string | null = null;
 
-  constructor(public globalService: GlobalService) { }
+  constructor(public globalService: GlobalService,private navCtrl: NavController) { }
 
   ngOnInit() {
     this.panier = this.globalService.panier;
@@ -43,4 +45,36 @@ export class PanierPage implements OnInit {
     }
   }
 
+  createOrder() {
+    const articles = this.panier
+      .filter(panierItem => panierItem.quantite > 0) // Filtrer les plats avec une quantité > 0
+      .map(panierItem => ({
+        produit_id: panierItem.item.id,
+        quantite: panierItem.quantite
+      }));
+
+    if (articles.length === 0) {
+      this.error = 'Aucun article sélectionné pour la commande.';
+      return;
+    }
+
+    const orderData = {
+      libelle: 'Nouvelle commande',
+      statut: 'en cours',
+      
+      articles: articles
+    };
+
+    this.globalService.createOrder(orderData).subscribe(
+      (response) => {
+        console.log('Commande créée avec succès', response);
+        // Reset panier or perform other success actions
+        this.navCtrl.navigateRoot('/home');
+      },
+      (error) => {
+        this.error = error;
+        console.error('Erreur lors de la création de la commande', error);
+      }
+    );
+  }
 }

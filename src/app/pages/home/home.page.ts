@@ -9,17 +9,54 @@ import { GlobalService } from 'src/app/services/global.service';
 })
 export class HomePage {
   categories: any[] = [];
-  plat: any[] = [];
+  plats: any[] = [];
   totalPrix: number = 0;
+  selectedPlat: any;
+  loading = true;
+  error: string | null = null;
 
   constructor(
     public globalService: GlobalService,
     private router: Router,
     private routerLink: Router
   ) {
-    this.categories = globalService.category_repas;
+
+    this.loadCategories();
+    this.loadPlats();
     this.initializeQuantities(); // Appel de la méthode pour initialiser les quantités
   }
+
+  
+  loadCategories() {
+    this.globalService.getCategories().subscribe({
+      next: (response: any) => {
+        this.categories = response.curent_page;
+       
+      },
+      error: (error: any) => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
+
+  loadPlats() {
+    this.globalService.getPlats().subscribe({
+      next: (response: any) => {
+        this.plats = response.curent_page;
+       
+          response.curent_page.forEach((plats: { quantity: number }) => {
+            plats.quantity = 0;
+          });
+          return response.curent_page;
+        },
+        
+      error: (error: any) => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
+   
+
 
   initializeQuantities() {
     this.categories.forEach((category) => {
