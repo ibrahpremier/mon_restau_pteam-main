@@ -19,10 +19,12 @@ export class SearchPage implements OnInit {
     public globalService: GlobalService,
     private router: Router
   ) {
-    this.categories = globalService.category_repas;
-    this.categories.forEach((cat: any) => {
-      this.plats = this.plats.concat(...cat.liste_plat);
-    });
+    //this.categories = globalService.category_repas;
+    // this.categories.forEach((cat: any) => {
+    //   this.plats = this.plats.concat(...cat.liste_plat);
+    // });
+    
+    // this.loadCategories();
     
   }
 
@@ -52,17 +54,35 @@ export class SearchPage implements OnInit {
   
 
   ngOnInit() {
+    this.loadPlats();
     this.filterItems(); // Initialisation du filtre
   }
 
   filterItems() {
+    this.filteredItems = this.plats;
     const searchTermLower = this.searchTerm.toLowerCase();
     this.filteredItems = this.plats.filter((plat:any) => {
-      plat.nom_plat.toLowerCase().includes(searchTermLower) || plat.category.nom_category.toLowerCase().includes(searchTermLower);
-
+      return plat.nom.toLowerCase().includes(searchTermLower);
   }) 
   }
 
+  loadPlats() {
+    this.globalService.getPlats().subscribe({
+      next: (response: any) => {
+        this.plats = response.curent_page;
+        this.filteredItems = response.curent_page;
+          response.curent_page.forEach((plats: { quantity: number }) => {
+            plats.quantity = 0;
+          });
+          return response.curent_page;
+        },
+        
+      error: (error: any) => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
+   
   goToHomePage() {
     this.router.navigate(['/home']);
   }
