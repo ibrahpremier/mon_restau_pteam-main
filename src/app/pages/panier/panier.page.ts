@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { GlobalService } from 'src/app/services/global.service';
+import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+
+
 @Component({
   selector: 'app-panier',
   templateUrl: './panier.page.html',
@@ -11,7 +14,7 @@ export class PanierPage implements OnInit {
   plats: any[] = [];
   error: string | null = null;
 
-  constructor(public globalService: GlobalService,private navCtrl: NavController) { }
+  constructor(public globalService: GlobalService,private router:Router, private navCtrl: NavController) { }
 
   ngOnInit() {
     this.panier = this.globalService.panier;
@@ -69,12 +72,19 @@ export class PanierPage implements OnInit {
       (response) => {
         console.log('Commande créée avec succès', response);
         // Reset panier or perform other success actions
-        this.navCtrl.navigateRoot('/home');
-      },
+        this.globalService.resetPanier();
+        // this.globalService.plats = this.globalService.copiedPlats;
+        // Rediriger vers la page Home avec un message de succès
+        this.globalService.setSuccessMessage('Commande validée avec succès !');
+      this.router.navigate(['/home']);
+    },
       (error) => {
         this.error = error;
         console.error('Erreur lors de la création de la commande', error);
       }
     );
   }
+
+
+ 
 }

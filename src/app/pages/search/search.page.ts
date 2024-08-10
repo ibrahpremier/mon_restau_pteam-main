@@ -9,7 +9,7 @@ import { GlobalService } from 'src/app/services/global.service';
 })
 export class SearchPage implements OnInit {
   searchTerm: string = '';
-  items: string[] = ['Pizza', 'Burger', 'Salade', 'Pâtes', 'Sushi'];
+  
   filteredItems: any[] = [];
   categories: any[] = [];
   plats: any[] = [];
@@ -69,12 +69,12 @@ export class SearchPage implements OnInit {
   loadPlats() {
     this.globalService.getPlats().subscribe({
       next: (response: any) => {
-        this.plats = response.curent_page;
-        this.filteredItems = response.curent_page;
-          response.curent_page.forEach((plats: { quantity: number }) => {
+        this.plats = response.data;
+        this.filteredItems = response.data;
+          response.data.forEach((plats: { quantity: number }) => {
             plats.quantity = 0;
           });
-          return response.curent_page;
+          return response.data;
         },
         
       error: (error: any) => {

@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalService } from 'src/app/services/global.service';
 
+import { ActivatedRoute } from '@angular/router';
+
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -9,28 +12,52 @@ import { GlobalService } from 'src/app/services/global.service';
 })
 export class HomePage {
   categories: any[] = [];
-  plats: any[] = [];
+ 
   totalPrix: number = 0;
   selectedPlat: any;
   loading = true;
   error: string | null = null;
+  successMessage: string | null = null;
+
+ 
+
 
   constructor(
     public globalService: GlobalService,
     private router: Router,
-    private routerLink: Router
+    private routerLink: Router,
+    private route: ActivatedRoute
+    
   ) {
 
     this.loadCategories();
-    this.loadPlats();
+    this.globalService.loadPlats();
     this.initializeQuantities(); // Appel de la méthode pour initialiser les quantités
+    
+  }
+
+  ngOnInit() {
+    
+    this.globalService.successMessage$.subscribe(message => {
+      if (message) {
+        this.successMessage = message;
+        setTimeout(() => {
+          this.successMessage = null;
+        }, 3000); // Cache le message après 3 secondes
+      }
+    });
+   
+  }
+
+  getPlats() {
+    return this.globalService.plats;
   }
 
   
   loadCategories() {
     this.globalService.getCategories().subscribe({
       next: (response: any) => {
-        this.categories = response.curent_page;
+        this.categories = response.data;
        
       },
       error: (error: any) => {
@@ -39,23 +66,7 @@ export class HomePage {
     });
   }
 
-  loadPlats() {
-    this.globalService.getPlats().subscribe({
-      next: (response: any) => {
-        this.plats = response.curent_page;
-       
-          response.curent_page.forEach((plats: { quantity: number }) => {
-            plats.quantity = 0;
-          });
-          return response.curent_page;
-        },
-        
-      error: (error: any) => {
-        console.error('There was an error!', error);
-      }
-    });
-  }
-   
+ 
 
 
   initializeQuantities() {

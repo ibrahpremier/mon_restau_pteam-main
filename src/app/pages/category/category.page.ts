@@ -12,7 +12,7 @@ export class CategoryPage implements OnInit {
   categorieId : number|null = null;
   category: any;
   categories: any[] = [];
-  plat: any[] = [];
+  plats: any[] = [];
   totalPrix: number = 0;
 
   constructor(
@@ -22,18 +22,34 @@ export class CategoryPage implements OnInit {
     private routerLink: Router
   ) {
 
-    this.initializeQuantities(); // Appel de la méthode pour initialiser les quantités
+    // this.initializeQuantities(); // Appel de la méthode pour initialiser les quantités
   }
 
   ngOnInit() {
     this.categorieId = Number(this.route.snapshot.paramMap.get('id'));
-    this.category =  this.globalService.getCategory(this.categorieId);
-    console.log(this.category);
+    if (this.categorieId !== null) {
+      this.loadCategory(this.categorieId);
+    }
   }
   loadCategory(id: number) {
     this.globalService.getCategory(id).subscribe({
       next: (response: any) => {
-        this.categories = response.curent_page;
+        this.category = response.data;
+        this.plats = response.data.produits.map((plat: any) => ({
+          ...plat,
+          quantity: 0
+        }));
+      },
+      error: (error: any) => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
+
+  loadCategories() {
+    this.globalService.getCategories().subscribe({
+      next: (response: any) => {
+        this.categories = response.data;
        
       },
       error: (error: any) => {
@@ -42,13 +58,14 @@ export class CategoryPage implements OnInit {
     });
   }
 
-  initializeQuantities() {
-    this.categories.forEach((category) => {
-      category.liste_plat.forEach((item: { quantity: number }) => {
-        item.quantity = 0; // Initialisation de la quantité à 0 pour chaque plat
-      });
-    });
-  }
+
+  // initializeQuantities() {
+  //   this.categories.forEach((category) => {
+  //     category.liste_plat.forEach((item: { quantity: number }) => {
+  //       item.quantity = 0; // Initialisation de la quantité à 0 pour chaque plat
+  //     });
+  //   });
+  // }
 
   goToOtherPage() {
     this.router.navigate(['/search']);

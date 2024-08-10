@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { throwError, Observable } from 'rxjs';
+import { throwError, Observable,BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+ 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 }
@@ -10,9 +11,27 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class GlobalService {
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = 'https://faridarestau.sahel-insertion.org/api';
+  private panierSubject = new BehaviorSubject<any[]>([]);
+  panier$ = this.panierSubject.asObservable();
+  panier: any[] = [];
+  quantity: number = 0;
+  plats: any[] = [];
+  copiedPlats : any[] =[];
+  private successMessageSubject = new BehaviorSubject<string | null>(null);
+  public successMessage$ = this.successMessageSubject.asObservable();
+
+  
+  constructor(private httpClient: HttpClient) { 
+    this.panier$.subscribe(data => this.panier = data); 
+  }
+
+  setSuccessMessage(message: string) {
+    this.successMessageSubject.next(message);
+  }
+
+
  
-  constructor(private httpClient: HttpClient) { }
 
   getCategory(id: number): Observable<any> {
     return this.httpClient.get<any>(`${this.apiUrl}/categorie/${id}`, httpOptions).pipe(
@@ -27,8 +46,15 @@ export class GlobalService {
   
  
   
-  panier: any[] = [];
-  quantity: number = 0;
+  resetPanier() {
+    this.panier = [];
+    this.panierSubject.next(this.panier); // Met à jour l'observable
+    this.plats.forEach(plat => {
+      plat.quantity=0;
+    });
+    
+  }
+  
   
   
 
@@ -38,6 +64,24 @@ export class GlobalService {
     catchError(this.handleError)
   );
   }
+
+
+  loadPlats() {
+    this.httpClient.get<any>(`${this.apiUrl}/produit`, httpOptions).subscribe({
+      next: (response: any) => {
+        this.plats = response.data.map((plat: any) => {
+          plat.quantity = 0; // Initialiser la quantité à 0
+          return plat;
+        });
+       
+        //this.copiedPlats= this.plats;
+         },
+      error: (error: any) => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
+   
 
   getPlats(): Observable<any> {
     return this.httpClient.get<any>(`${this.apiUrl}/produit`, httpOptions).pipe(
@@ -52,7 +96,7 @@ export class GlobalService {
     );
   }
 
-
+  
 
   ajouterAuPanier(item: any, quantite: number) {
     const index = this.panier.findIndex(p => p.item.id === item.id);
@@ -108,6 +152,9 @@ export class GlobalService {
 
     return throwError('Something bad happened; please try again later.');
   }
+
+
+  
 
 }
 
