@@ -1,6 +1,10 @@
 <ion-header class="ion-text-center">
   <ion-toolbar>
     <ion-title slot="start">Petit Paris</ion-title>
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+  
     <ion-item id="panier" slot="end" routerLink="/panier">
       <ion-icon name="cart-outline"></ion-icon>
       <ion-badge class="badge-panier" color="danger">{{ globalService.getTotalItems() }}</ion-badge>
@@ -9,25 +13,29 @@
       <ion-icon name="clipboard-outline"></ion-icon>
     </ion-item>
   </ion-toolbar>
+  
+
 </ion-header>
 
 <ion-content>
+ 
   <ion-searchbar show-cancel-button="focus" placeholder="Rechercher votre plat ou menu" (ionFocus)="goToOtherPage()"
     (ionChange)="goToOtherPage()"></ion-searchbar>
   <ion-grid id="category">
-    <swiper-container [slidesPerView]="4.5" [spaceBetween]="10" [speed]="200">
+    <swiper-container [slidesPerView]="3.4" [spaceBetween]="10" [speed]="200">
+      <swiper-slide (click)="goToPageCategories()">
+        <ion-icon name="options-outline" class="category-icon"></ion-icon>
+        <div class="category-text">Tous</div>
+      </swiper-slide>
       <swiper-slide *ngFor="let category of categories">
         <ion-item lines="none" class="ion-no-padding">
           <img button [routerLink]="['/category', category.id ]"
             src="https://img.freepik.com/free-photo/grilled-meat-skewers-with-fresh-vegetables-spices-generated-by-ai_188544-53896.jpg?t=st=1714789305~exp=1714792905~hmac=566b596995254839e10fa917895293962da06723b5d538d6f4c03fcce30c8fe4&w=1060"
             alt="">
         </ion-item>
-        <div class="category-text">{{ category.nom_category }}</div>
+        <div class="category-text">{{ category.nom_categorie }}</div>
       </swiper-slide>
-      <swiper-slide (click)="goToPageCategories()">
-        <ion-icon name="options-outline" class="category-icon"></ion-icon>
-        <div class="category-text">Tous</div>
-      </swiper-slide>
+    
     </swiper-container>
   </ion-grid>
 
@@ -46,16 +54,17 @@
   <!-- affiche la liste de tous les plat dans toutes les categories  -->
   <ion-row class="nos_categories">
     <ng-container >
-      <ng-container *ngFor="let item of plats">
+      <ng-container *ngFor="let item of globalService.plats">
         <ion-col size="6">
           <ion-card>
-            <img
+            <img  [routerLink]="['/food-detail', item.id]" 
               src="https://img.freepik.com/photos-gratuite/gros-plan-delicieuse-viande-rotie-legumes-sous-lumieres_181624-43643.jpg?t=st=1714797398~exp=1714800998~hmac=a65276258f50bc7a1934b5a6e4096a476f38109ef2891615b30a34879226a8e5&w=900" />
-            <ion-card-header class="content-plat">
+            <ion-card-header class="content-plat" >
               <ion-card-title>{{ item.nom }} </ion-card-title>
               <ion-card-subtitle>{{ item.prix }} FCFA</ion-card-subtitle>
             </ion-card-header>
             <!-- btn  -->
+             
             <ion-button color="danger" class="ion-no-border" expand="full">
               <div class="btn-call" [hidden]="getQuantity(item) === 0">
                 <!-- Lorsque la quantité est supérieure à 0 -->
@@ -77,7 +86,7 @@
                   </ion-button>
                 </ion-col>
               </div>
-              <div class="btn-zero" [hidden]="getQuantity(item) >= 1">
+              <div class="btn-zero" [hidden]="item.quantity >= 1">
                 <!-- Lorsque la quantité est inférieure ou égale à 0, et que le contenu est affiché -->
                 <ion-button mode="ios" color="light" (click)="addQuantity(item)" style="font-size: 14px;">
                   <ion-icon name="add" slot="icon-only"></ion-icon>
@@ -94,6 +103,7 @@
 
 <ion-footer>
   <ion-toolbar>
+
     <ion-button routerLink="/panier" color="primary" shape="round" expand="full" class="total-button">
       <ion-grid>
         <ion-row>

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ category.nom_category }}</ion-title>
+    <ion-title  *ngIf="category">{{ category.nom_categorie }}</ion-title>
     <ion-item id="panier" slot="end" routerLink="/panier">
       <ion-icon name="cart-outline"></ion-icon>
       <ion-badge class="badge-panier" color="danger">{{ globalService.getTotalItems() }}</ion-badge>
@@ -23,7 +23,7 @@
             src="https://img.freepik.com/free-photo/grilled-meat-skewers-with-fresh-vegetables-spices-generated-by-ai_188544-53896.jpg?t=st=1714789305~exp=1714792905~hmac=566b596995254839e10fa917895293962da06723b5d538d6f4c03fcce30c8fe4&w=1060"
             alt="">
         </ion-item>
-        <div class="category-text">{{ category.nom_category }}</div>
+        <div class="category-text">{{ category.nom_categorie }}</div>
       </swiper-slide>
       <swiper-slide (click)="goToPageCategories()">
         <ion-icon name="options-outline" class="category-icon"></ion-icon>
@@ -34,11 +34,11 @@
 
 
   <ion-row>
-    <ion-col *ngFor="let plat of category.liste_plat" size="6">
-      <ion-card button [routerLink]="['/food-detail', plat.id]">
-        <img [src]="plat.image_plat" alt="">
+    <ion-col  *ngFor="let plat of plats" size="6">
+      <ion-card button >
+        <img src="https://img.freepik.com/free-photo/grilled-meat-skewers-with-fresh-vegetables-spices-generated-by-ai_188544-53896.jpg?t=st=1714789305~exp=1714792905~hmac=566b596995254839e10fa917895293962da06723b5d538d6f4c03fcce30c8fe4&w=1060" alt=""   [routerLink]="['/food-detail', plat.id]">
         <ion-card-header>
-          <ion-card-subtitle>{{ plat.nom_plat }}</ion-card-subtitle>
+          <ion-card-subtitle>{{ plat.nom }}</ion-card-subtitle>
           <ion-card-title> $ {{ plat.prix }} </ion-card-title>
         </ion-card-header>
 

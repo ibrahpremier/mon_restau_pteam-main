@@ -22,7 +22,7 @@ export class ListCategoriesPage implements OnInit {
   loadCategories() {
     this.globalService.getCategories().subscribe({
       next: (response: any) => {
-        this.categories = response.curent_page;
+        this.categories = response.data;
        
       },
       error: (error: any) => {
