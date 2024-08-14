@@ -23,10 +23,10 @@
     (ionChange)="goToOtherPage()"></ion-searchbar>
   <ion-grid id="category">
     <swiper-container [slidesPerView]="3.4" [spaceBetween]="10" [speed]="200">
-      <swiper-slide (click)="goToPageCategories()">
+      <!-- <swiper-slide (click)="goToPageCategories()">
         <ion-icon name="options-outline" class="category-icon"></ion-icon>
         <div class="category-text">Tous</div>
-      </swiper-slide>
+      </swiper-slide> -->
       <swiper-slide *ngFor="let category of categories">
         <ion-item lines="none" class="ion-no-padding">
           <img button [routerLink]="['/category', category.id ]"
@@ -42,7 +42,7 @@
   <ion-row>
     <ion-col size="12">
       <ion-card lines="none">
-        <img src="./assets/banner/baner.png" alt="">
+        <img src="assets/banner/baner.jpg" alt="">
       </ion-card>
     </ion-col>
   </ion-row>
