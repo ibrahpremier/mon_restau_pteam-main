@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalService } from 'src/app/services/global.service';
-
+import { ModalController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
+
+import { InscriptionComponent } from 'src/app/components/inscription/inscription.component';
 
 
 @Component({
@@ -18,6 +20,7 @@ export class HomePage {
   loading = true;
   error: string | null = null;
   successMessage: string | null = null;
+  client:any;
 
  
 
@@ -26,7 +29,8 @@ export class HomePage {
     public globalService: GlobalService,
     private router: Router,
     private routerLink: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modalController:ModalController
     
   ) {
 
@@ -46,8 +50,27 @@ export class HomePage {
         }, 3000); // Cache le message après 3 secondes
       }
     });
-   
+    this.route.paramMap.subscribe(params => {
+      this.client = params.get('client');
+      if (this.client) {
+        console.log('Client ID:', this.client);
+        // Vous pouvez maintenant utiliser la variable `client` dans votre logique
+      } else {
+        console.log('No client ID provided');
+      }
+    });
+  
   }
+   
+  async goToPanier() {
+    if (this.client) {
+      this.router.navigate(['/panier', this.client]);
+    } else {
+      this.router.navigate(['/panier']);
+    }
+  }
+  
+  
 
   getPlats() {
     return this.globalService.plats;
@@ -111,5 +134,8 @@ export class HomePage {
   getQuantity(item: any): number {
     return item.quantity; // Retourne la quantité actuelle de l'article
   }
+
+
+ 
   
 }

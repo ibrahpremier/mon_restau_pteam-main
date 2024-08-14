@@ -3,14 +3,19 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
-  },
-  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'home/:client',
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
+  },
+
   {
     path: 'category/:id',
     loadChildren: () => import('./pages/category/category.module').then( m => m.CategoryPageModule)
@@ -26,6 +31,10 @@ const routes: Routes = [
   {
     path: 'list-categories',
     loadChildren: () => import('./pages/list-categories/list-categories.module').then( m => m.ListCategoriesPageModule)
+  },
+  {
+    path: 'panier/:client',
+    loadChildren: () => import('./pages/panier/panier.module').then( m => m.PanierPageModule)
   },
   {
     path: 'panier',

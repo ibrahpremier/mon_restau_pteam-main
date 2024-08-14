@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { PanierPageRoutingModule } from './panier-routing.module';
+import { InscriptionComponent } from 'src/app/components/inscription/inscription.component'; // Importer la composante
+
 
 import { PanierPage } from './panier.page';
 
@@ -13,7 +15,9 @@ import { PanierPage } from './panier.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    PanierPageRoutingModule
+    PanierPageRoutingModule,
+    InscriptionComponent
+
   ],
   declarations: [PanierPage]
 })

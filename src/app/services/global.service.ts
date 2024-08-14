@@ -20,7 +20,7 @@ export class GlobalService {
   copiedPlats : any[] =[];
   private successMessageSubject = new BehaviorSubject<string | null>(null);
   public successMessage$ = this.successMessageSubject.asObservable();
-
+ private client: any;
   
   constructor(private httpClient: HttpClient) { 
     this.panier$.subscribe(data => this.panier = data); 
@@ -31,7 +31,13 @@ export class GlobalService {
   }
 
 
- 
+  setClient(client: any) {
+    this.client = client;
+  }
+
+  getClient() {
+    return this.client;
+  }
 
   getCategory(id: number): Observable<any> {
     return this.httpClient.get<any>(`${this.apiUrl}/categorie/${id}`, httpOptions).pipe(
@@ -144,6 +150,15 @@ export class GlobalService {
 
   actualiserPanier() {
     console.log('Contenu du panier : ', this.panier);
+  }
+
+
+
+  register(userData: any): Observable<any> {
+    
+    return this.httpClient.post<any>(`${this.apiUrl}/register`, userData, httpOptions).pipe(
+      catchError(this.handleError)
+    );
   }
 
   private handleError(error:any): Observable<never> {

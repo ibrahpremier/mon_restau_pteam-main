@@ -72,6 +72,15 @@
     </ion-list-header>
 
     <ion-item-group>
+      <div *ngIf="clientId">
+        <h2>Détails du Client</h2>
+        <p><strong>ID du Client:</strong> {{ clientId }}</p>
+        <p><strong>Nom du Client:</strong> {{ clientName }}</p>
+        <p><strong>Prénom du Client:</strong> {{ clientPrenom }}</p>
+      </div>
+      <div *ngIf="!clientId">
+        <p>Aucun détail client disponible.</p>
+      </div>
       <ion-item>
         <ion-label color="dark">Numero de Table</ion-label>
         <ion-text slot="end" color="dark">
