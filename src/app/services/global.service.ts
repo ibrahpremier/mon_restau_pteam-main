@@ -20,7 +20,7 @@ export class GlobalService {
   copiedPlats : any[] =[];
   private successMessageSubject = new BehaviorSubject<string | null>(null);
   public successMessage$ = this.successMessageSubject.asObservable();
- private client: any;
+  private client: any = null;
   
   constructor(private httpClient: HttpClient) { 
     this.panier$.subscribe(data => this.panier = data); 

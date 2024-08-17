@@ -24,14 +24,15 @@ import { ModalController } from '@ionic/angular';
 export class InscriptionComponent  implements OnInit {
   inscriptionForm: FormGroup;
   @Input() returnUrl: string | null = null; 
+  client: any;
 
   constructor(private fb: FormBuilder, private globalService: GlobalService, private router:Router,private modalController: ModalController) {
     this.inscriptionForm = this.fb.group({
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
       telephone: ['', Validators.required],
-      role: ['', Validators.required],
-      status: ['', Validators.required],
+      role: ['user', Validators.required],
+      status: ['1', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
@@ -41,15 +42,18 @@ export class InscriptionComponent  implements OnInit {
   ngOnInit() {}
 
 
-  async onSubmit() { // Marquer la fonction comme 'async'
+  async onSubmit() {
     if (this.inscriptionForm.valid) {
       this.globalService.register(this.inscriptionForm.value).subscribe({
-        next: async (response) => { // Marquer cette fonction comme 'async' aussi
+        next: async (response) => {
           console.log('Inscription réussie:', response.data);
 
-          // Supposons que l'ID du client soit dans la réponse sous `response.clientId`
+          // Supposons que l'ID du client soit dans la réponse sous `response.data.id`
           const clientId = response.data.id;
-          
+
+          // Stocker l'ID du client dans le service global
+          this.globalService.setClient(clientId);
+
           // Fermer le modal
           const modal = await this.modalController.getTop();
           if (modal) {
@@ -57,14 +61,7 @@ export class InscriptionComponent  implements OnInit {
           }
 
           // Rediriger vers la page Panier en passant l'ID du client
-          this.router.navigate(['/panier' ],  {
-            queryParams: {
-              id: response.data.id,
-              nom: response.data.nom,
-              prenom:response.data.prenom, // Ajoutez d'autres informations si nécessaire
-            }
-          }
-         );
+          this.router.navigate(['/panier', clientId]);
         },
         error: (err) => {
           console.error('Erreur lors de l\'inscription:', err);

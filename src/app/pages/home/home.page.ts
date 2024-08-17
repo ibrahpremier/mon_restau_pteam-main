@@ -50,26 +50,28 @@ export class HomePage {
         }, 3000); // Cache le message après 3 secondes
       }
     });
+    // Récupérer le paramètre 'client' depuis l'URL
     this.route.paramMap.subscribe(params => {
-      this.client = params.get('client');
-      if (this.client) {
-        console.log('Client ID:', this.client);
-        // Vous pouvez maintenant utiliser la variable `client` dans votre logique
-      } else {
-        console.log('No client ID provided');
+      const client = params.get('client');
+      console.log('client:', client)
+      if (client) {
+        // Stocker le client dans le service global
+        this.globalService.setClient(client);
       }
     });
+    this.client = this.globalService.getClient();
+
   
   }
    
   async goToPanier() {
-    if (this.client) {
-      this.router.navigate(['/panier', this.client]);
+    const client = this.globalService.getClient();
+    if (client) {this.router.navigate(['/panier', client]);
+      
     } else {
       this.router.navigate(['/panier']);
     }
   }
-  
   
 
   getPlats() {

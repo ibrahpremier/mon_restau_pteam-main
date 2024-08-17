@@ -65,7 +65,14 @@ export class FoodDetailPage implements OnInit {
   
 
 
-
+  async goToPanier() {
+    const client = this.globalService.getClient();
+    if (client) {this.router.navigate(['/panier', client]);
+      
+    } else {
+      this.router.navigate(['/panier']);
+    }
+  }
   
    
   goToHomePage() {

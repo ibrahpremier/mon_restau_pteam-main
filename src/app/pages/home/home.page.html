@@ -103,8 +103,13 @@
 
 <ion-footer>
   <ion-toolbar>
-
-    <ion-button  (click)="goToPanier()"  color="primary" shape="round" expand="full" class="total-button">
+    <ion-button 
+      *ngIf="globalService.getTotalItems() > 0" 
+      (click)="goToPanier()"  
+      color="primary" 
+      shape="round" 
+      expand="full" 
+      class="total-button">
       <ion-grid>
         <ion-row>
           <ion-col size="auto">

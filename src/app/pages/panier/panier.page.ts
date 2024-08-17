@@ -17,10 +17,9 @@ export class PanierPage implements OnInit {
   plats: any[] = [];
   error: string | null = null;
   client:any;
-  clientId: string | null = null;
-  clientName: string | null = null;
-  clientPrenom: string | null = null;
-
+  clientId: string = '';
+  nom: string = '';
+  prenom: string = '';
   
 
   constructor(public globalService: GlobalService,
@@ -31,21 +30,14 @@ export class PanierPage implements OnInit {
 
   ngOnInit() {
     this.panier = this.globalService.panier;
-  console.log(this.route.snapshot.paramMap)
-  this.client = this.route.snapshot.paramMap.get('client');
-  if (this.client) {
-    console.log('Client ID in Panier:', this.client);
-  } else {
-    console.log('No client ID in Panier');
+    this.client = this.globalService.getClient();
+    console.log('Client from service:', this.client);
   }
 
+  // this.clientId = this.route.snapshot.paramMap.get('client')!;
+  //   this.nom = this.route.snapshot.paramMap.get('nom')!;
+  //   this.prenom = this.route.snapshot.paramMap.get('prenom')!;
 
-  this.route.queryParams.subscribe(params => {
-    this.clientId = params['id'] || null;
-    this.clientName = params['nom'] || null;
-    this.clientPrenom = params['prenom'] || null;
-  });
-}
   
     
   
@@ -108,7 +100,8 @@ export class PanierPage implements OnInit {
           // Reset panier or perform other success actions
           this.globalService.resetPanier();
           this.globalService.setSuccessMessage('Commande validée avec succès !');
-          this.router.navigate(['/home']);
+            // Rediriger vers la page d'accueil avec le paramètre client dans la route
+            this.router.navigate(['/home', this.client]);
         },
         (error) => {
           this.error = error;
